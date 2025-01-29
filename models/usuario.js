@@ -32,4 +32,9 @@ const UsuarioSchema = Schema({
     },
 });
 
+UsuarioSchema.methods.toJSON = function() { //no puede ser una funcón flecha por el this ???
+    const { __v, password , ...usuario } = this.toObject(); // me saco de encima __v y password
+    return usuario;
+};
+
 module.exports = model('Usuario', UsuarioSchema);
