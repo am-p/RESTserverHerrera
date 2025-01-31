@@ -33,7 +33,8 @@ const UsuarioSchema = Schema({
 });
 
 UsuarioSchema.methods.toJSON = function() { //no puede ser una funcón flecha por el this ???
-    const { __v, password , ...usuario } = this.toObject(); // me saco de encima __v y password
+    const { __v, password , _id, ...usuario } = this.toObject(); // me saco de encima __v y password
+    usuario.uid = _id;
     return usuario;
 };
 
