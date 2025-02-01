@@ -1,10 +1,8 @@
 const { Router } = require('express'); //es una funcion de express
-const { usuariosGet, usuariosPut, usuariosPost, usuariosPatch, usuariosDelete } = require('../controllers/usuarios');
+const { usuariosGet, usuariosPut, usuariosPost, usuariosDelete } = require('../controllers/usuarios');
 const { check } = require('express-validator');
-const { validarCampos } = require('../middlewares/validar-campos');
-const { validarJWT } = require('../middlewares/validar-jwt');
 const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators');
-
+const { validarCampos, validarJWT, tieneRole } = require('../middlewares/index');
 
 const router = Router();
 
@@ -25,18 +23,12 @@ router.put('/:id', [
     validarCampos
 ] , usuariosPut);
 
-router.patch('/',  usuariosPatch);
 router.delete('/:id', [
     validarJWT,
+    tieneRole('ADMIN_ROLE', 'VENTAS_ROLE'),
     check('id', 'No es un ID valido').isMongoId(),
     check('id').custom(existeUsuarioPorId),
     validarCampos
 ], usuariosDelete);
-
-router.delete('/', (req, res) => {
-    res.json({
-	msg: 'delete API'
-    });
-});
 
 module.exports = router;
