@@ -33,7 +33,7 @@ const login = async(req, res = response) => {
 	res.json({
 	    usuario,
 	    token
-    });
+	});
     } catch(error) {
 	console.log(error);
 	res.status(500).json({
@@ -68,7 +68,6 @@ const googleSignIn = async(req, res = response) => {
 	}
 
 	const token = await generarJWT( usuario.id );
-
 	
 	res.json({
 	    usuario,
