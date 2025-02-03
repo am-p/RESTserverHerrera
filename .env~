@@ -1,5 +1,0 @@
-PORT=8080
-MONGODB_ATLAS=mongodb+srv://usuario_curso_herrera:4CHmgmCW3dwBAFAa@clusterherrera.y03e9.mongodb.net/cafeDB
-
-USER-usuario_curso_herrera
-PASS=4CHmgmCW3dwBAFAa
