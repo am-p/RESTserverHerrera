@@ -1,17 +1,18 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { validarJWT, validarCampos } = require('../middlewares');
-const { crearCategoria } = require('../controllers/categorias'); 
+const { validarJWT, validarCampos, esAdminRole } = require('../middlewares');
+const { crearCategoria, obtenerCategorias, obtenerCategoria, actualizarCategoria, borrarCategoria } = require('../controllers/categorias'); 
+const { existeCategoriaPorId } = require('../helpers/db-validators');
 
 const router = Router();
 
-router.get('/', (req, res) => {
-    res.json('get');
-});
+router.get('/', obtenerCategorias);
 
-router.get('/:id', (req, res) => {
-    res.json('get - id');
-});
+router.get('/:id', [
+    check('id', 'No es un ID valido').isMongoId(),
+    check('id').custom(existeCategoriaPorId),
+    validarCampos
+], obtenerCategoria);
 
 router.post('/', [
     validarJWT,
@@ -19,13 +20,20 @@ router.post('/', [
     validarCampos
 ], crearCategoria);
 
-router.put('/:id', (req, res) => {
-    res.json('put');
-});
+router.put('/:id', [
+    validarJWT,
+    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+    check('id').custom(existeCategoriaPorId),    
+    validarCampos
+], actualizarCategoria);
 
-router.delete('/:id', (req, res) => {
-    res.json('delete');
-});
+router.delete('/:id', [
+    validarJWT,
+    esAdminRole,
+    check('id', 'No es un ID valido').isMongoId(),
+    check('id').custom(existeCategoriaPorId),    
+    validarCampos
+], borrarCategoria);
 
 
 

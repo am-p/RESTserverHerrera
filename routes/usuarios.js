@@ -1,4 +1,4 @@
-const { Router } = require('express'); //es una funcion de express
+const { Router } = require('express'); 
 const { usuariosGet, usuariosPut, usuariosPost, usuariosDelete } = require('../controllers/usuarios');
 const { check } = require('express-validator');
 const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators');

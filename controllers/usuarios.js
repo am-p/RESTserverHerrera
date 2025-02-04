@@ -12,7 +12,8 @@ const usuariosGet = async(req = request, res = response) => {
     ]);
     
     res.json({
-	total, usuarios
+	total,
+	usuarios
     });
 };
 
@@ -40,12 +41,6 @@ const usuariosPut = async(req, res = response) => {
     res.json(usuario);
 };
 
-const usuariosPatch = (req, res) => {
-    res.status(201).json({
-	msg: 'patch API - usuariosPatch'
-    });
-};
-
 const usuariosDelete = async(req, res) => {
     const { id } = req.params;
     const usuario = await Usuario.findByIdAndUpdate(id, { estado: false });
@@ -57,6 +52,5 @@ module.exports = {
     usuariosGet,
     usuariosPost,
     usuariosPut,
-    usuariosPatch,
     usuariosDelete
 };
