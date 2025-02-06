@@ -7,13 +7,13 @@ const ProductoSchema = Schema({
     },
     usuario: {
         type: Schema.Types.ObjectId,
-	 ref: 'Usuario',
+	ref: 'Usuario',
         required: true
     },
     estado: {
         type: Boolean,
         default: true,
-	 required: true
+	required: true
     },
     precio: {
         type: Number,
