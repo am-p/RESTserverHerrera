@@ -1,11 +1,10 @@
 const { response, request } = require("express");
 const { ObjectId } = require('mongoose').Types;
 const { Categoria, Producto, Usuario } = require('../models');
-const usuario = require("../models/usuario");
 
 const coleccionesPermitidas = [
     'usuarios',
-    'categoria',
+    'categorias',
     'productos',
     'roles'
 ];
@@ -26,10 +25,47 @@ const buscarUsuarios = async(termino = '', res = response) => {
 	$or: [{ nombre: regex }, {correo: regex}],
 	$and: [{ estado: true }]
     });
+    
     res.json({
 	results: usuarios
     });
     
+};
+
+const buscarCategorias = async(termino = '', res = response) => {
+    const esMongoID = ObjectId.isValid(termino);
+
+    if (esMongoID) {
+	const categoria = await Categoria.findById(termino);
+	return res.json({
+	    results: (categoria) ? [categoria] : []
+	});
+    }
+
+    const regex = new RegExp(termino, 'i');
+    const categorias = await Categoria.find({ nombre: regex ,  estado: true});
+
+    res.json({
+	results: categorias
+    });
+};
+
+const buscarProductos = async(termino = '', res = response) => {
+    const esMongoID = ObjectId.isValid(termino);
+
+    if (esMongoID) {
+	const producto = await Producto.findById(termino).populate('categoria', 'nombre');
+	return res.json({
+	    results: (producto) ? [producto] : []
+	});
+    }
+
+    const regex = new RegExp(termino, 'i');
+    const productos = await Producto.find({ nombre: regex , estado: true}).populate('categoria', 'nombre');
+
+    res.json({
+	results: productos
+    });
 };
 
 const buscar = (req = request, res = response) => {
@@ -45,9 +81,11 @@ const buscar = (req = request, res = response) => {
     case 'usuarios':
 	buscarUsuarios(termino, res);
 	break;
-    case 'categoria':
+    case 'categorias':
+	buscarCategorias(termino, res);
 	break;
     case 'productos':
+	buscarProductos(termino, res);
 	break;
     default:
 	res.status(500).json({
