@@ -1,6 +1,7 @@
 const { response, request } = require("express");
 const { ObjectId } = require('mongoose').Types;
 const { Categoria, Producto, Usuario } = require('../models');
+const usuario = require("../models/usuario");
 
 const coleccionesPermitidas = [
     'usuarios',
@@ -14,10 +15,20 @@ const buscarUsuarios = async(termino = '', res = response) => {
 
     if (esMongoID) {
 	const usuario = await Usuario.findById(termino);
-	res.json({
+	return res.json({
 	    results: (usuario) ? [usuario] : []
 	});
     }
+
+    const regex = new RegExp(termino, 'i');
+
+    const usuarios = await Usuario.find({
+	$or: [{ nombre: regex }, {correo: regex}],
+	$and: [{ estado: true }]
+    });
+    res.json({
+	results: usuarios
+    });
     
 };
 
