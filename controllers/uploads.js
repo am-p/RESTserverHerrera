@@ -87,8 +87,11 @@ const mostrarImagen = async(req = request, res = response) => {
 	    return res.sendFile(pathImagen);
 	}
     }
+    //no tiene nada que ver con el pathImagen anterior, fuera del scope
+    const pathImagen = path.join(__dirname, '../assets/no-image.jpg');
+    res.sendFile( pathImagen );
     
-}
+};
 
 module.exports = {
     cargarArchivo,
